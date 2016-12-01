@@ -41,9 +41,6 @@ class Mind:
                 return pool
                 # end def name2object
 
-
-# end class mind
-
 class Clock:
     "keeps track of time"
 
@@ -71,7 +68,6 @@ class Clock:
             return 0
         else:
             return 1
-
 
 class MentonPool:
     "a pool of mentons"
@@ -114,9 +110,6 @@ class MentonPool:
             return spentMentons + self.mentons
             self.mentons = 0
 
-
-# end class MentonPool
-
 def createMentonPool(theName, theMind, mentonCapacity, replenishRate):
     '''Takes in 3 arguments and creates a menton pool.
 
@@ -136,9 +129,6 @@ def createMentonPool(theName, theMind, mentonCapacity, replenishRate):
 
     # returns the object
     return temporaryMentonPoolHolder
-
-
-# end createGoal function definition
 
 class Goal:
     "the goals of the system"
@@ -179,10 +169,6 @@ class Goal:
             if action.goalName == self.name:
                 return action
                 # DEBUGGING print "The action is", action.name, "."
-
-
-# END Goal class definition
-
 # TASK: theImportance needs to only accept a number between 0 and 1, there isn't currently a control for this!
 def createGoal(theMind, theName, theImportance):
     '''Takes in two arguments and generates a goal. 
@@ -205,9 +191,6 @@ def createGoal(theMind, theName, theImportance):
 
     # returns the chunk name
     return temporaryGoalHolder
-
-
-# end createGoal function definition
 
 class Action:
     "actions are what are executed to achieve goals."
@@ -276,11 +259,6 @@ class Action:
         # reset the mentons still wanted variable for the next time we try to
         #    save enough mentons for it to execute again.
         self.mentonsStillWanted = self.cost
-
-
-# end Action class definition
-
-
 # QUESTION: theCost vs the importance? is theCost, what we assigned theImportance to when we created the goals?
 def createAction(theMind, theName, theGoalList, theCost, theImportance, mentonPoolName="mainMentonPool"):
     '''Takes in three arguments and generates an action.
@@ -298,9 +276,6 @@ def createAction(theMind, theName, theGoalList, theCost, theImportance, mentonPo
     print ("in createAction: name is ", temporaryActionHolder.name)
     # add the action ID to the global actions list.
     theMind.actions.append(temporaryActionHolder)
-
-
-# end createAction function definition
 
 class Chunk:
     "defines the chunk class"
@@ -366,9 +341,6 @@ class Chunk:
                                                                                          "(THINGY ", thisThingy, ") " \
                                                                                                                  ")")
 
-
-# END class Chunk definition
-
 class MunClass:
     def __init__(self):
         self.count = 0
@@ -381,12 +353,10 @@ class MunClass:
         self.count = self.count + 1
         return aString + str(self.count)
 
-
 # LAKE THEORY:
 # t1 -> r1 -> t2
 # aka thingx, rela. and thingy
 # QUESTION: how do belief and probability work?
-
 
 def createChunk(theMind, thingx, relation, thingy, beliefValue=1.0, probability=1.0):
     '''Takes in one to three arguments and generates a chunk. 
@@ -416,7 +386,6 @@ def createChunk(theMind, thingx, relation, thingy, beliefValue=1.0, probability=
     # returns the chunk identifier
     return temporaryChunkHolder
 
-
 def generateName(theChunk):
     # This is called to create self.name in the init.
     # if the thingx is a string, that's what we'll print
@@ -436,10 +405,6 @@ def generateName(theChunk):
         print ("ERROR: thingy is not string or chunk (generateName)")
     return "[%s_%s_%s]" % (thisThingx, theChunk.relation, thisThingy)
 
-
-# end def generateName
-
-
 def compareImportance(action1, action2):
     '''takes 2 actions or goals and returns -1 if first is less than second, 0, 1
 
@@ -455,9 +420,6 @@ def compareImportance(action1, action2):
     #   at the top of the list.
     return (-1 * cmp(action1.getImportance, action2.getImportance))
 
-
-# end def compareImportance
-
 def getAllActiveGoals(theMind):
     '''returns all currently active goals.
 
@@ -465,9 +427,6 @@ def getAllActiveGoals(theMind):
     # for now it returns everything in the goals list.
     # in the future it may do something different. 
     return theMind.goals
-
-
-
 # called by thingx2chunks, relation2chunks, thingy2chunks
 # uses the global variable "chunks"
 def symbol_place2chunks(theMind, theSymbol, thePlace):
@@ -506,9 +465,6 @@ def symbol_place2chunks(theMind, theSymbol, thePlace):
 
     return theList
 
-
-# END def symbol_place2chunk
-
 def thingx2chunks(theMind, theThingx):
     '''returns a list of chunks with theThingx in the thingx slot.
 
@@ -516,7 +472,6 @@ def thingx2chunks(theMind, theThingx):
 
     theThingx is a string of the symbol you want to search for.'''
     return symbol_place2chunks(theThingx, "thingx")
-
 
 def relation2chunks(theMind, theRelation):
     '''returns a list of chunks with theRelation in the relation slot.
@@ -526,7 +481,6 @@ def relation2chunks(theMind, theRelation):
     theRelation is a string of the symbol you want to search for.'''
     return symbol_place2chunks(theRelation, "relation")
 
-
 def thingy2chunks(theMind, theThingy):
     '''returns a list of chunks with theThingy in the thingy slot.
 
@@ -535,13 +489,11 @@ def thingy2chunks(theMind, theThingy):
     theThingy is a string of the symbol you want to search for.'''
     return symbol_place2chunks(theThingy, "thingy")
 
-
 def chunk2thingx(theChunk):
     '''returns whatever is in the thingx slot of the input chunk.
 
     theChunk is the variable that holds the chunk.'''
     return theChunk.thingx
-
 
 def modusPonens(aChunk, bChunk, verbose=0):
     '''tries to apply modus ponens to an input chunks.
@@ -581,16 +533,10 @@ def modusPonens(aChunk, bChunk, verbose=0):
     else:
         return 0
 
-
 def mean(*theNumbers):
     '''Returns an integer expressing the mean of all input numbers.
     input floats unless you want a returned integer.'''
     return sum(theNumbers) / len(theNumbers)
-
-
-# end def mean
-
-
 
 def determineProportionsOfMentons(aListOfActions, mentonPoolName):
     '''sets each action's proportion of mentons allocated to it.
@@ -611,7 +557,6 @@ def determineProportionsOfMentons(aListOfActions, mentonPoolName):
         thisAction.mentonProportion = thisAction.importance / sumImportance
         # end def determineProportionsOfMentons
 
-
 def weStillHaveMentonsToAllocate(theActions, thePool):
     '''takes a list of actions and a pool. returns true if there are mentons left in the pool and not all of the maxes of the actions have been filled.
 
@@ -622,9 +567,6 @@ def weStillHaveMentonsToAllocate(theActions, thePool):
         return 1
     else:
         return 0
-
-
-# end def weStillHaveMentonsToAllocate
 
 def actionsAreStillHungry(theActions):
     '''takes in a list of actions. Returns true if at least one still needs mentons, false otherwise.
@@ -639,10 +581,6 @@ def actionsAreStillHungry(theActions):
     # the value of hungry will be counted as true if it's greater than one. So if
     #   at least one action was hungry, this function will return as true.
     return hungry
-
-
-# end def actionsAreStillHungry
-
 
 def topLevelLoop(theMind, aClock):
     '''This is the function that gets run to make Lake work.
@@ -729,10 +667,6 @@ def topLevelLoop(theMind, aClock):
         topLevelLoop(theMind, aClock)
     else:
         return 1
-
-
-# end def topLevelLoop
-
 # Reads a file written in CYC-L and turns each fact into a chunk for some
 # Lake agent.
 def cyc2lake(theMind, filename="./cyc-top.txt"):
@@ -768,59 +702,6 @@ def cyc2lake(theMind, filename="./cyc-top.txt"):
     # close the file you're reading from.
     cycFile.close()
 
-"""  Start  """
-"""
-peterLake = Mind("Peter Lake")
-theClock = Clock(10)
-peterMentonPool = createMentonPool("mainMentonPool", peterLake, 100, 100)
-
-def lkj():
-    topLevelLoop(peterLake, theClock)
-
-
-# MORE INITIALIZATION
-createChunk(peterLake, "TESTthingx", "TESTrelation", "TESTthingy")
-createChunk(peterLake, "pug", "is_a", "dog")
-# for debugging
-#createChunk("pugs", "are", "awesome")
-
-
-# first we create two simple goals..
-# __init__(self, theMind, theName, theImportance)
-createGoal(peterLake, "goalWalkFast", 3)
-createGoal(peterLake, "goalTalkNormal", 8)
-createGoal(peterLake, "goalTalkDifficult", 8)
-
-
-# now we create actions for those goals
-#__init__(self, theMind, theName, theGoalList, theCost, theImportance, mentonPoolName)
-## this does not work ## createAction("actionWalk", "goalWalkFast", 7, name2object("goalWalkFast").importance, 3)
-## createAction(theMind, theName, theGoalList, theCost, theImportance, mentonPoolName="mainMentonPool")
-createAction(peterLake, "actionWalk",  "goalWalkFast", 7, 3, "mainMentonPool")
-## FDO print "name is ", peterLake.actions[0].name
-createAction(peterLake, "actionTalkNormal",  "goalTalkNormal", 2, 8, "mainMentonPool")
-## FDO print "mind is ", peterLake.actions[1].mind.name
-createAction(peterLake, "actionTalkDifficult", "goalTalkDifficult", 4, 8, "mainMentonPool")
-
-theAction = peterLake.name2object("actionTalkDifficult")
-theAction.code = "doDrawing(drawing1)"
-
-createAction(peterLake, "doDrawing1", "recfig", 5, 5, "mainMentonPool")
-theAction = peterLake.name2object("doDrawing1")
-theAction.code = "doDrawing(drawing1)"
-
-createAction(peterLake, "doDrawing2", "recfic", 5, 5, "mainMentonPool")
-theAction = peterLake.name2object("doDrawing2")
-theAction.code = "doDrawing(drawing2)"
-
-testy = 'print "PERFECTION!"'
-def oiu(command):
-    pass #exec command
-
-def doDrawing(theDrawing):
-    print ("hola")
-
-"""
 """   MACKENZIE'S POOL   """
 
 mackenzie_LAKE = Mind("Mackenzie Lake")
