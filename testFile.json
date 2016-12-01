@@ -1,0 +1,48 @@
+{
+	"mind" : {
+		"name": "testBrain_lake",
+		"pool" : {
+			"pool_name" : "testBrain_pool",
+			"mentonCapacity" : 100,
+			"replenishRate" : 100
+		},
+		"gaction":[
+			{
+				"goal":{
+					"name":"goal_ONE",
+					"importance":".60"
+				},
+				"action":{
+					"name":"action_ONE",
+					"cost":6,
+					"importance":8
+				},
+				"relationship": "does"
+			},
+						{
+				"goal":{
+					"name":"goal_TWO",
+					"importance":".60"
+				},
+				"action":{
+					"name":"action_TWO",
+					"cost":6,
+					"importance":8
+				},
+				"relationship": "does"
+			},
+						{
+				"goal":{
+					"name":"goal_THREE",
+					"importance":".60"
+				},
+				"action":{
+					"name":"action_THREE",
+					"cost":6,
+					"importance":8
+				},
+				"relationship": "does"
+			}
+		]
+	}
+}
