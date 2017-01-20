@@ -1,18 +1,8 @@
-'''CGSC 4001/5001 Can Mekik, Josh Noronha, and Zahrah Hajali'''
-
-# This is a toy model demonstrating our system. It was what was
-# run in our presentation
 
 from ProductionSystem import *
 from MentonEngine import *
+import lake
 
-#productions
-
-#productions for driving task
-
-
-# arrow => 
-# node  =>
 drive = Production(
     Precondition(
         set(),
@@ -20,8 +10,8 @@ drive = Production(
             Node('Light flash'),
             Arrow(
                 (
-                Node('Is'), 
-                Node('Light flash'), 
+                Node('Is'),
+                Node('Light flash'),
                 Node('Red')
                 )
                 )
@@ -52,14 +42,14 @@ stop = Production(
         {Node('Stopped')}),
     Action({Node("Stopped")}))
 
-#dual task proudctions
-#coming soon.
-
 productions = {drive, lookout, observe, stop}
 knowledge = Knowledge({Node("No initial system knowledge")})
 
 #menton engine
-engine = MentonEngine()
+
+#engine = MentonEngine()
+engine = lake.Mind("test_mind")
+
 pools = {'Perceptual' : 3, 'Motor/Planning' : 3}
 capacities = {'Perceptual' : 5, 'Motor/Planning' : 5}
 rates = {'Perceptual' : 2, 'Motor/Planning' : 2}
