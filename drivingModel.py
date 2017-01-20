@@ -1,6 +1,5 @@
 
 from ProductionSystem import *
-from MentonEngine import *
 import lake
 
 drive = Production(
@@ -67,12 +66,12 @@ system = ProductionSystem(knowledge, productions, engine.bind, parameters)
 
 
 system.step()
-print "State of the Mentons in step 1: " + str(engine.pools)
+print "State of the Mentons in step 1: " + str(engine.mentonPools)
 system.knowledge.add({Node('Light flash'),
                       Arrow((Node("Is"),
                              Node("Light flash"),
                              Node("Red")))})
 for i in range(3):
     system.step()
-    print "State of the Mentons in step " + str(i+2) + ": " + str(engine.pools)
+    print "State of the Mentons in step " + str(i+2) + ": " + str(engine.mentonPools)
 print '\n'+system.log

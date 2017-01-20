@@ -26,7 +26,94 @@ class Mind:
         self.actions = []
         self.currentActions = []
         """"""
-        self.mentonPools = [] #maybe good for future, but time being, only one menton pool will be used
+        self.mentonPools = {}
+        self.productions = None
+        self.capacities = None
+        # self.rates = mentonPool.replenishRate
+        self.costs = None
+        self.priorities = None
+
+    def __call__(self):
+        """Returns a dict mapping productions to booleans. Booleans
+        represent whether their keys can fire at current simulation
+        setp."""
+
+        """Stolen directly from ME..."""
+
+        # determine applicable productions
+        fire = {}
+        for p in self.productions:
+            fire[p] = p.precondition(p.system)
+
+        # filter out productions that do not meet menton costs
+        # make menton pool deductions
+        applicable = self.prioritize([p for p in self.productions if fire[p]])
+        for p in applicable:
+            if self.executable(p):
+                self.deduct(p)
+            else:
+                fire[p] = False
+
+        # refresh menton pools
+        self.updateMentons()
+        return fire
+
+    def updateMentons(self):
+        """ Updates mentons."""
+
+        for pool in self.mentonPools:
+            if self.rates[pool] < self.capacities[pool] - self.mentonPools[pool]:
+                self.mentonPools[pool] += self.rates[pool]
+            else:
+                self.mentonPools[pool] = self.capacities[pool]
+
+    def executable(self, production):
+        """
+        Will return true if it is possible to execute.
+        If any one cost is too high then it will return false
+        """
+
+        costs = self.costs[production]
+        for pool in costs:
+            if self.mentonPools[pool] < costs[pool]:
+                return False
+        return True
+
+    def deduct(self, production):
+        """
+        Deduct will deduct mentons from the menton pools based on
+        production costs
+        """
+
+        costs = self.costs[production]
+        for pool in costs:
+            self.mentonPools[pool] -= costs[pool]
+
+    def prioritize(self, tosort):
+        """
+        returns list of productions that are sorted by priority
+        """
+        tosort.sort(self.compare)
+        return tosort
+
+    def compare(self, p, q):
+        """  returns a bool p > q  """
+        return self.priorities[p] < self.priorities[q]
+
+    def bind(self, productions,(pools, capacities, rates, costs, priorities)):
+        """
+        takes: all the things needed to make a mind
+        :return mind
+        """
+
+        self.productions = productions  # actions
+        self.mentonPools = pools        # {} that takes str (names of the pools) and floats (initial values)
+        self.capacities = capacities    # ??? presumably how many productions can be handled?
+        self.rates = rates              # refresh rate
+        self.costs = costs              # maps the menton cost of the productions
+        self.priorities = priorities    # ??? presumably how important each task is
+
+        return self
 
     def create_gaction(self, theName):
         # create functionality old: name2object

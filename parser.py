@@ -1,7 +1,6 @@
 import json
-from MentonEngine import *
 from ProductionSystem import *
-import lake_mackenzie
+import lake
 
 
 class Parser:
@@ -82,7 +81,7 @@ if __name__ == "__main__":
     parser.extractValues(f, gaction)
     chunkList = parser.creatGactions(gaction)
     productions = parser.useProductionSystem(chunkList)
-    engine = MentonEngine()
+    engine = lake.Mind()
 
     priorities = {}
 
