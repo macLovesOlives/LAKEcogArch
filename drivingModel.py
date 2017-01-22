@@ -44,9 +44,6 @@ stop = Production(
 productions = {drive, lookout, observe, stop}
 knowledge = Knowledge({Node("No initial system knowledge")})
 
-#menton engine
-
-#engine = MentonEngine()
 engine = lake.Mind("test_mind")
 
 pools = {'Perceptual' : 3, 'Motor/Planning' : 3}

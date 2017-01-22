@@ -21,17 +21,14 @@ class Mind:
     def __init__(self, theName):
         self.name = theName
         self.chunks = []
-        """ These should all be grouped in one pool? """
         self.goals = []
         self.actions = []
         self.currentActions = []
-        """"""
         self.mentonPools = {}
         self.productions = None
-        self.capacities = None
-        # self.rates = mentonPool.replenishRate
-        self.costs = None
-        self.priorities = None
+        self.capacities  = None
+        self.costs       = None
+        self.priorities  = None
 
     def __call__(self):
         """Returns a dict mapping productions to booleans. Booleans
@@ -41,6 +38,9 @@ class Mind:
         """Stolen directly from ME..."""
 
         # determine applicable productions
+
+        print("Mind __call__")
+
         fire = {}
         for p in self.productions:
             fire[p] = p.precondition(p.system)
@@ -59,13 +59,15 @@ class Mind:
         return fire
 
     def updateMentons(self):
-        """ Updates mentons."""
+        """ Updates mentons. """
 
-        for pool in self.mentonPools:
-            if self.rates[pool] < self.capacities[pool] - self.mentonPools[pool]:
-                self.mentonPools[pool] += self.rates[pool]
+        print("Mind updateMentons")
+
+        for i in range(len(self.mentonPools)):
+            if self.mentonPools[i].replenishRate < self.mentonPools[i].maxMentons - self.mentonPools[i].mentons:
+                self.mentonPools[i].mentons += self.mentonPools[i].replenishRate
             else:
-                self.mentonPools[pool] = self.capacities[pool]
+                self.mentonPools[i].mentons = self.mentonPools[i].maxMentons
 
     def executable(self, production):
         """
@@ -73,10 +75,14 @@ class Mind:
         If any one cost is too high then it will return false
         """
 
+        print("Mind executable")
+
         costs = self.costs[production]
-        for pool in costs:
-            if self.mentonPools[pool] < costs[pool]:
+        i = 0
+        for key in costs:
+            if self.mentonPools[i].mentons < costs[key]:
                 return False
+            i += 1
         return True
 
     def deduct(self, production):
@@ -85,19 +91,29 @@ class Mind:
         production costs
         """
 
+        print("Mind deduct")
+
         costs = self.costs[production]
-        for pool in costs:
-            self.mentonPools[pool] -= costs[pool]
+        i = 0
+        for key in costs:
+            self.mentonPools[i].mentons -= costs[key]
+            i += 1
 
     def prioritize(self, tosort):
         """
         returns list of productions that are sorted by priority
         """
+
+        print("Mind prioritize")
+
         tosort.sort(self.compare)
         return tosort
 
     def compare(self, p, q):
         """  returns a bool p > q  """
+
+        print("Mind compare")
+
         return self.priorities[p] < self.priorities[q]
 
     def bind(self, productions,(pools, capacities, rates, costs, priorities)):
@@ -106,16 +122,27 @@ class Mind:
         :return mind
         """
 
-        self.productions = productions  # actions
-        self.mentonPools = pools        # {} that takes str (names of the pools) and floats (initial values)
-        self.capacities = capacities    # ??? presumably how many productions can be handled?
-        self.rates = rates              # refresh rate
-        self.costs = costs              # maps the menton cost of the productions
-        self.priorities = priorities    # ??? presumably how important each task is
+        print("Mind bind")
+
+        pool_keys = pools.keys()
+        pool_list = []
+
+        for i in range(len(pool_keys)):
+            pool = MentonPool(self.name, pool_keys[i], pools[pool_keys[i]], rates[pool_keys[i]])
+            pool_list.append(pool)
+        self.productions = productions
+        self.mentonPools = pool_list
+        self.capacities = capacities
+        self.rates = rates
+        self.costs = costs
+        self.priorities = priorities
 
         return self
 
     def create_gaction(self, theName):
+
+        print("Mind create_gaction")
+
         # create functionality old: name2object
 
         # first check to see if it is a name of a chunk.
@@ -140,63 +167,60 @@ class Mind:
 
 class MentonPool:
     "a pool of mentons"
-
     def __init__(self, theMind, theName, mentonCapacity, replenishRate):
-        # this menton pool is a part of an individual mind
+
+        print("MentonPool __init__")
+
         self.mind = theMind
-        # The pool of mentons has a name to identify itself in the list
-        #    of mentonPools.
         self.name = theName
-        # The pool has a maximum capacity.
         self.mentons = mentonCapacity
-        # When the pool is created, it starts at maximum capacity.
         self.maxMentons = mentonCapacity
-        # The replenish rate is how fast it recovers from spent mentons.
         self.replenishRate = replenishRate
-        # The temporary list of actions gets used in the top level loop.
-        #    it holds those actions drawing on this pool that help the
-        #    current goals.
         self.temporaryListOfActions = []
 
-    # adds replenishRate mentons to number of mentons in pool,
-    #    but not so that it overflows with mentons over maxMentons
     def replenish(self):
+
+        print("MentonPool replenish")
+
         self.mentons = self.mentons + self.replenishRate
         if self.mentons > self.maxMentons:
             self.mentons = self.maxMentons
 
-    # Run this method to request mentons in the pool.
-    # It returns the number of mentons that it can spare.
-    # If there are plenty of mentons, the return value is
-    #   the same as the input value.
-    # If there are not enough resources, then it returns all
-    #   it has left, and the current menton count goes to zero.
     def spend(self, spentMentons):
+
+        print("MentonPool spend")
+
         self.mentons = self.mentons - spentMentons
         if self.mentons > -1:
             return spentMentons
         else:
-            return spentMentons + self.mentons
             self.mentons = 0
-
-#def createMentonPool(theName, theMind, mentonCapacity, replenishRate):
-
+            return spentMentons + self.mentons
 
 class Goal:
     "the goals of the system"
 
     def __init__(self, theMind, theName, theImportance):
+
+        print("Goal __init__")
+
         self.mind = theMind
         self.name = theName
         self.importance = theImportance
         self.drawing = ""
 
     def printGoal(self):
+
+        print("Goal printGoal")
+
         print ("(", self.name, self.importance, ")")
 
     def nextActionName(self, theActions):
         # loop through all the actions, return the name of the action
         #   that matches the goal
+
+        print("Goal nextActionName")
+
         for action in theActions:
             if action.goalName == self.name:
                 return action.name
@@ -205,6 +229,9 @@ class Goal:
     def nextAction(self, theActions):
         # loop through all the actions, return the action
         #   that matches the goal
+
+        print("Goal nextAction")
+
         for action in theActions:
             if action.goalName == self.name:
                 return action
@@ -216,15 +243,24 @@ class Action:
     "actions are what are executed to achieve goals."
 
     def __init__(self, theMind, theName, theGoalList, theCost, theImportance, mentonPoolName):
+
+        print("Action __init__")
+
         self.mind = theMind
 
     def hungryP(self):
+
+        print("Action hungryP")
+
         print("not implemented!")
         print("more mentons wanted --> this is a bonus feature?")
 
     def getImportance(self, theGoalName=[]):
         # If there is no goal name input, then just take the default one.
         # If it's input just use it.
+
+        print("Action getImportance")
+
         if theGoalName == []:
             return self.mind.name2object(self.goalName).importance
         else:
@@ -237,6 +273,9 @@ class Action:
         #the "spend" method returns the same number you put into it unless there
         #  are not enough mentons, then it returns what it can. It also removes
         #  mentons from the action's pool.
+
+        print("Action getMentons")
+
         mentonsToGive = self.mind.name2object(self.mentonPoolName).spend(numberOfMentons)
         self.mentons = self.mentons + mentonsToGive
         self.mentonsStillWanted = abs(self.mentonsStillWanted - mentonsToGive)
@@ -245,6 +284,9 @@ class Action:
     # for now it's only printing.
     def execute(self, command='print "no command specified"'):
         # This is a placeholder for what the action would actually do.
+
+        print("Action execute")
+
         print ("(", self.name, " executing at power", self.mentons, " for ", self.goalName, ")")
         # exec command
         # spend the mentons
@@ -266,6 +308,9 @@ class Chunk:
     #    beliefValueARG  for the belief value (optional)
     #    probabilityARG  for the probability value (optional)
     def __init__(self, theMind, thingxARG, relationARG, thingyARG, beliefValueARG=1.0, probabilityARG=1.0):
+
+        print("Chunk __init__")
+
         self.thingx = thingxARG
         self.relation = relationARG
         self.thingy = thingyARG
@@ -277,6 +322,9 @@ class Chunk:
     # the succinct version of the chunk's Covlan representation
     def printChunk(self):
         # if the thingx is a string, that's what we'll print
+
+        print("Chunk printChunk")
+
         if isinstance(self.thingx, str):
             thisThingx = self.thingx
         # but if the thingx is a chunk, we need to use its name
@@ -297,6 +345,9 @@ class Chunk:
     # the verbose version of its Covlan representation
     def printChunkVerbose(self):
         # if the thingx is a string, that's what we'll print
+
+        print("Chunk printChunkVerbose")
+
         if isinstance(self.thingx, str):
             thisThingx = self.thingx
         # but if the thingx is a chunk, we need to use its name

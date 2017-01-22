@@ -2,6 +2,11 @@ import json
 from ProductionSystem import *
 import lake
 
+"""
+intended to parse a json to easily add and create models in lake...
+Not updated... nor accurate anymore.
+Keeping in case it is needed in future (quickly modifiable)
+"""
 
 class Parser:
     def __init__(self):
@@ -38,7 +43,7 @@ class Parser:
             counter += 1
 
     def creatGactions(self, gactionlist):
-        lake = lake_mackenzie
+        lake = lake
 
         # create mind
         mind = lake.Mind(self.mind)
