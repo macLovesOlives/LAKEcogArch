@@ -63,12 +63,17 @@ system = ProductionSystem(knowledge, productions, engine.bind, parameters)
 
 
 system.step()
-print "State of the Mentons in step 1: " + str(engine.mentonPools)
+print "State of the Mentons in step 1: "
+for i in range(len(engine.mentonPools)):
+    print(str(engine.mentonPools[i].name) + ": " + str(engine.mentonPools[i].mentons))
 system.knowledge.add({Node('Light flash'),
                       Arrow((Node("Is"),
                              Node("Light flash"),
                              Node("Red")))})
 for i in range(3):
     system.step()
-    print "State of the Mentons in step " + str(i+2) + ": " + str(engine.mentonPools)
+    print "State of the Mentons in step " + str(i+2) + ": "
+    for i in range(len(engine.mentonPools)):
+        print(str(engine.mentonPools[i].name) + ": " + str(engine.mentonPools[i].mentons))
+
 print '\n'+system.log

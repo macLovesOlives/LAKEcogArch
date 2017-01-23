@@ -15,6 +15,7 @@ Mind > Menton Pool
 
 """
 
+
 class Mind:
     "one individual animal mind"
 
@@ -29,13 +30,12 @@ class Mind:
         self.capacities  = None
         self.costs       = None
         self.priorities  = None
+        self.rates       = None
 
     def __call__(self):
         """Returns a dict mapping productions to booleans. Booleans
         represent whether their keys can fire at current simulation
         setp."""
-
-        """Stolen directly from ME..."""
 
         # determine applicable productions
 
@@ -68,6 +68,7 @@ class Mind:
                 self.mentonPools[i].mentons += self.mentonPools[i].replenishRate
             else:
                 self.mentonPools[i].mentons = self.mentonPools[i].maxMentons
+            self.mentonPools[i].printPool()
 
     def executable(self, production):
         """
@@ -97,7 +98,10 @@ class Mind:
         i = 0
         for key in costs:
             self.mentonPools[i].mentons -= costs[key]
+            self.mentonPools[i].printPool()
             i += 1
+
+
 
     def prioritize(self, tosort):
         """
@@ -163,7 +167,6 @@ class Mind:
                 return pool
                 # end def name2object
 
-#class Clock:
 
 class MentonPool:
     "a pool of mentons"
@@ -177,6 +180,19 @@ class MentonPool:
         self.maxMentons = mentonCapacity
         self.replenishRate = replenishRate
         self.temporaryListOfActions = []
+
+        self.printPool()
+
+    def printPool(self):
+        print("\n\n****  POOL  ****")
+        print("mind: "          + str(self.mind))
+        print("name: "          + str(self.name))
+        print("mentons: "       + str(self.mentons))
+        print("maxMentons: "    + str(self.maxMentons))
+        print("replenishRate: " + str(self.replenishRate))
+        for i in range(len(self.temporaryListOfActions)):
+            print("temporaryListOfActions " + str(i) + ": " + str(self.temporaryListOfActions[i]))
+        print("****************\n\n")
 
     def replenish(self):
 
@@ -196,6 +212,7 @@ class MentonPool:
         else:
             self.mentons = 0
             return spentMentons + self.mentons
+
 
 class Goal:
     "the goals of the system"
@@ -237,7 +254,6 @@ class Goal:
                 return action
                 # DEBUGGING print "The action is", action.name, "."
 
-#def createGoal(theMind, theName, theImportance):
 
 class Action:
     "actions are what are executed to achieve goals."
@@ -295,7 +311,6 @@ class Action:
         #    save enough mentons for it to execute again.
         self.mentonsStillWanted = self.cost
 
-#def createAction(theMind, theName, theGoalList, theCost, theImportance, mentonPoolName="mainMentonPool"):
 
 class Chunk:
     "defines the chunk class"
@@ -369,5 +384,3 @@ class Chunk:
                                                             "(RELATION ", self.relation, ") " \
                                                                                          "(THINGY ", thisThingy, ") " \
                                                                                                                  ")")
-
-#def createChunk(theMind, thingx, relation, thingy, beliefValue=1.0, probability=1.0):
