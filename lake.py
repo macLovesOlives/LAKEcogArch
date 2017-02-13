@@ -3,33 +3,22 @@
 # Started 2006
 # Extended and implemented by Mackenzie Ostler (mackenzie.ostler@gmail.com)
 
-VERBOSE = 1
-
-"""
-
-Mind > Menton Pool
-     > Chunk
-     > Gaction > Goal
-               > Action
-
-"""
-
 
 class Mind:
-    "one individual animal mind"
+    """" one individual animal mind """
 
-    def __init__(self, theName):
-        self.name = theName
+    def __init__(self, name):
+        self.name = name
         self.chunks = []
         self.goals = []
         self.actions = []
         self.currentActions = []
         self.mentonPools = {}
         self.productions = None
-        self.capacities  = None
-        self.costs       = None
-        self.priorities  = None
-        self.rates       = None
+        self.capacities = None
+        self.costs = None
+        self.priorities = None
+        self.rates = None
 
     def __call__(self):
         """Returns a dict mapping productions to booleans. Booleans
@@ -37,8 +26,6 @@ class Mind:
         setp."""
 
         # determine applicable productions
-
-        print("Mind __call__")
 
         fire = {}
         for p in self.productions:
@@ -54,28 +41,24 @@ class Mind:
                 fire[p] = False
 
         # refresh menton pools
-        self.updateMentons()
+        self.update_mentons()
         return fire
 
-    def updateMentons(self):
+    def update_mentons(self):
         """ Updates mentons. """
-
-        print("Mind updateMentons")
 
         for i in range(len(self.mentonPools)):
             if self.mentonPools[i].replenishRate < self.mentonPools[i].maxMentons - self.mentonPools[i].mentons:
                 self.mentonPools[i].mentons += self.mentonPools[i].replenishRate
             else:
                 self.mentonPools[i].mentons = self.mentonPools[i].maxMentons
-            self.mentonPools[i].printPool()
+                # self.mentonPools[i].print_pool()
 
     def executable(self, production):
         """
         Will return true if it is possible to execute.
         If any one cost is too high then it will return false
         """
-
-        print("Mind executable")
 
         costs = self.costs[production]
         i = 0
@@ -91,13 +74,11 @@ class Mind:
         production costs
         """
 
-        print("Mind deduct")
-
         costs = self.costs[production]
         i = 0
         for key in costs:
             self.mentonPools[i].mentons -= costs[key]
-            self.mentonPools[i].printPool()
+            # self.mentonPools[i].print_pool()
             i += 1
 
     def prioritize(self, tosort):
@@ -105,31 +86,23 @@ class Mind:
         returns list of productions that are sorted by priority
         """
 
-        print("Mind prioritize")
-
         tosort.sort(self.compare)
         return tosort
 
     def compare(self, p, q):
         """  returns a bool p > q  """
 
-        print("Mind compare")
-
         return self.priorities[p] < self.priorities[q]
 
-    def bind(self, productions,(pools, capacities, rates, costs, priorities)):
-        """
-        takes: all the things needed to make a mind
-        :return mind
-        """
-
-        print("Mind bind")
+    def bind(self, productions, (pools, capacities, rates, costs, priorities)):
+        """ binds a mind to a production system """
 
         pool_keys = pools.keys()
         pool_list = []
 
         for i in range(len(pool_keys)):
-            pool = MentonPool(self.name, pool_keys[i], capacities[pool_keys[i]],pools[pool_keys[i]], rates[pool_keys[i]])
+            pool = MentonPool(self.name, pool_keys[i], capacities[pool_keys[i]],
+                              pools[pool_keys[i]], rates[pool_keys[i]])
             pool_list.append(pool)
         self.productions = productions
         self.mentonPools = pool_list
@@ -140,36 +113,33 @@ class Mind:
 
         return self
 
-    def create_gaction(self, theName):
-
-        print("Mind create_gaction")
+    def create_gaction(self, name):
 
         # create functionality old: name2object
 
         # first check to see if it is a name of a chunk.
         for aChunk in self.chunks:
-            if theName == aChunk.name:
+            if name == aChunk.name:
                 return aChunk
         # next see if it's the name of an action.
         for action in self.actions:
-            if theName == action.name:
+            if name == action.name:
                 return action
         # next see if it's the name of a goal.
         for goal in self.goals:
-            if theName == goal.name:
+            if name == goal.name:
                 return goal
         # next see if it's the name of a menton pool.
         for pool in self.mentonPools:
-            if theName == pool.name:
+            if name == pool.name:
                 return pool
                 # end def name2object
 
 
 class MentonPool:
-    "a pool of mentons"
-    def __init__(self, the_mind, the_name, menton_capacity, current_mentons, replenish_rate):
+    """a pool of mentons"""
 
-        print("MentonPool __init__")
+    def __init__(self, the_mind, the_name, menton_capacity, current_mentons, replenish_rate):
 
         self.mind = the_mind
         self.name = the_name
@@ -178,14 +148,14 @@ class MentonPool:
         self.replenishRate = replenish_rate
         self.temporaryListOfActions = []
 
-        self.printPool()
+        # self.print_pool()
 
-    def printPool(self):
+    def print_pool(self):
         print("\n\n****  POOL  ****")
-        print("mind: "          + str(self.mind))
-        print("name: "          + str(self.name))
-        print("mentons: "       + str(self.mentons))
-        print("maxMentons: "    + str(self.maxMentons))
+        print("mind: " + str(self.mind))
+        print("name: " + str(self.name))
+        print("mentons: " + str(self.mentons))
+        print("maxMentons: " + str(self.maxMentons))
         print("replenishRate: " + str(self.replenishRate))
         for i in range(len(self.temporaryListOfActions)):
             print("temporaryListOfActions " + str(i) + ": " + str(self.temporaryListOfActions[i]))
@@ -193,191 +163,165 @@ class MentonPool:
 
     def replenish(self):
 
-        print("MentonPool replenish")
-
         self.mentons = self.mentons + self.replenishRate
         if self.mentons > self.maxMentons:
             self.mentons = self.maxMentons
 
-    def spend(self, spentMentons):
+    def spend(self, spent_mentons):
 
-        print("MentonPool spend")
-
-        self.mentons = self.mentons - spentMentons
+        self.mentons = self.mentons - spent_mentons
         if self.mentons > -1:
-            return spentMentons
+            return spent_mentons
         else:
             self.mentons = 0
-            return spentMentons + self.mentons
+            return spent_mentons + self.mentons
 
 
 class Goal:
-    "the goals of the system"
+    """"the goals of the system"""
 
-    def __init__(self, theMind, theName, theImportance):
+    def __init__(self, the_mind, the_name, the_importance):
 
-        print("Goal __init__")
-
-        self.mind = theMind
-        self.name = theName
-        self.importance = theImportance
+        self.mind = the_mind
+        self.name = the_name
+        self.importance = the_importance
         self.drawing = ""
 
-    def printGoal(self):
+    def print_goal(self):
+        print("(", self.name, self.importance, ")")
 
-        print("Goal printGoal")
-
-        print ("(", self.name, self.importance, ")")
-
-    def nextActionName(self, theActions):
-        # loop through all the actions, return the name of the action
-        #   that matches the goal
-
-        print("Goal nextActionName")
-
-        for action in theActions:
+    def next_action_name(self, the_actions):
+        for action in the_actions:
             if action.goalName == self.name:
                 return action.name
-                # DEBUGGING print "The action is", action.name, "."
 
-    def nextAction(self, theActions):
-        # loop through all the actions, return the action
-        #   that matches the goal
-
-        print("Goal nextAction")
-
-        for action in theActions:
+    def next_action(self, the_actions):
+        for action in the_actions:
             if action.goalName == self.name:
                 return action
                 # DEBUGGING print "The action is", action.name, "."
 
 
 class Action:
-    "actions are what are executed to achieve goals."
+    """actions are what are executed to achieve goals."""
 
-    def __init__(self, theMind, theName, theGoalList, theCost, theImportance, mentonPoolName):
+    def __init__(self, the_mind):
+        self.mind = the_mind
+        self.mentons = None
+        self.mentons_wanted = None
 
-        print("Action __init__")
-
-        self.mind = theMind
-
-    def hungryP(self):
-
-        print("Action hungryP")
-
+    @staticmethod
+    def hungry():
         print("not implemented!")
         print("more mentons wanted --> this is a bonus feature?")
 
-    def getImportance(self, theGoalName=[]):
+    def get_importance(self, goal_name=None):
         # If there is no goal name input, then just take the default one.
         # If it's input just use it.
+        if goal_name is None:
+            goal_name = []
 
-        print("Action getImportance")
-
-        if theGoalName == []:
-            return self.mind.name2object(self.goalName).importance
+        if not goal_name:
+            return self.mind.name2object(self.goal_name).importance
         else:
-            return self.mind.name2object(theGoalName).importance
+            return self.mind.name2object(goal_name).importance
 
     # This method allows the top level loop to allocate mentons to the action.
     # It's important that this is done through the method, rather than directly,
     #    because the mentons still wanted variable needs to be updated.
-    def getMentons(self, numberOfMentons):
-        #the "spend" method returns the same number you put into it unless there
+    def get_mentons(self, number_of_mentons):
+        # the "spend" method returns the same number you put into it unless there
         #  are not enough mentons, then it returns what it can. It also removes
         #  mentons from the action's pool.
 
-        print("Action getMentons")
-
-        mentonsToGive = self.mind.name2object(self.mentonPoolName).spend(numberOfMentons)
-        self.mentons = self.mentons + mentonsToGive
-        self.mentonsStillWanted = abs(self.mentonsStillWanted - mentonsToGive)
+        mentons_to_give = self.mind.name2object(self.mentonPoolName).spend(number_of_mentons)
+        self.mentons = self.mentons + mentons_to_give
+        self.mentons_wanted = abs(self.mentons_wanted - mentons_to_give)
 
     # this is what runs when the action is executed.
     # for now it's only printing.
-    def execute(self, command='print "no command specified"'):
+    def execute(self):
         # This is a placeholder for what the action would actually do.
 
-        print("Action execute")
-
-        print ("(", self.name, " executing at power", self.mentons, " for ", self.goalName, ")")
+        print("(", self.name, " executing at power", self.mentons, " for ", self.goal_name, ")")
         # exec command
         # spend the mentons
         self.mentons = 0
         # reset the mentons still wanted variable for the next time we try to
         #    save enough mentons for it to execute again.
-        self.mentonsStillWanted = self.cost
+        self.mentons_wanted = self.cost
 
 
 class Chunk:
-    "defines the chunk class"
+    """"defines the chunk class"""
+    """
+    the input arguments are:
+       theMind         for the mind that contains this chunk
+       thingxARG       for the thingx
+       relationARG     for the relation
+       thingyARG       for the thingy
+       beliefValueARG  for the belief value (optional)
+       probabilityARG  for the probability value (optional)
+    """
 
-    # the input arguments are:
-    #    theMind         for the mind that contains this chunk
-    #    thingxARG       for the thingx
-    #    relationARG     for the relation
-    #    thingyARG       for the thingy
-    #    beliefValueARG  for the belief value (optional)
-    #    probabilityARG  for the probability value (optional)
-    def __init__(self, theMind, thingxARG, relationARG, thingyARG, beliefValueARG=1.0, probabilityARG=1.0):
+    def __init__(self, mind, thingx, relation, thingy, belief_value=1.0, probability=1.0):
 
-        print("Chunk __init__")
-
-        self.thingx = thingxARG
-        self.relation = relationARG
-        self.thingy = thingyARG
+        self.mind = mind
+        self.thingx = thingx
+        self.relation = relation
+        self.thingy = thingy
         self.name = generateName(self)
         self.activation = 0.0
-        self.beliefValue = beliefValueARG
-        self.probability = probabilityARG
+        self.beliefValue = belief_value
+        self.probability = probability
 
     # the succinct version of the chunk's Covlan representation
-    def printChunk(self):
+    def print_chunk(self):
         # if the thingx is a string, that's what we'll print
 
-        print("Chunk printChunk")
-
         if isinstance(self.thingx, str):
-            thisThingx = self.thingx
+            this_thingx = self.thingx
         # but if the thingx is a chunk, we need to use its name
         elif isinstance(self.thingx, Chunk):
-            thisThingx = self.thingx.name
+            this_thingx = self.thingx.name
         else:
-            print ("ERROR: thingx is not string or chunk")
+            print("ERROR: thingx is not string or chunk")
+            return
         # now do the same for thingy
         if isinstance(self.thingy, str):
-            thisThingy = self.thingy
+            this_thingy = self.thingy
         elif isinstance(self.thingy, Chunk):
-            thisThingy = self.thingy.name
+            this_thingy = self.thingy.name
         else:
-            print ("ERROR: thingy is not string or chunk")
+            print("ERROR: thingy is not string or chunk")
+            return
         # now print out what we've collected.
-        print ("(", thisThingx, self.relation, thisThingy, ")")
+        print("(", this_thingx, self.relation, this_thingy, ")")
 
     # the verbose version of its Covlan representation
-    def printChunkVerbose(self):
+    def print_chunk_long(self):
         # if the thingx is a string, that's what we'll print
 
-        print("Chunk printChunkVerbose")
-
         if isinstance(self.thingx, str):
-            thisThingx = self.thingx
+            this_thingx = self.thingx
         # but if the thingx is a chunk, we need to use its name
         elif isinstance(self.thingx, Chunk):
-            thisThingx = self.thingx.name
+            this_thingx = self.thingx.name
         else:
-            print ("ERROR: thingx is not string or chunk")
+            print("ERROR: thingx is not string or chunk")
+            return
         # now do the same for thingy
         if isinstance(self.thingy, str):
-            thisThingy = self.thingy
+            this_thingy = self.thingy
         elif isinstance(self.thingy, Chunk):
-            thisThingy = self.thingy.name
+            this_thingy = self.thingy.name
         else:
-            print ("ERROR: thingy is not string or chunk")
+            print("ERROR: thingy is not string or chunk")
+            return
 
-        print ("(" \
-               "(NAME ", self.name, ") " \
-                                    "(THINGX ", thisThingx, ") " \
-                                                            "(RELATION ", self.relation, ") " \
-                                                                                         "(THINGY ", thisThingy, ") " \
-                                                                                                                 ")")
+        print("("
+              "(NAME ", self.name, ") "
+                                   "(THINGX ", this_thingx, ") "
+                                                            "(RELATION ", self.relation, ") "
+                                                                                         "(THINGY ", this_thingy, ") "
+                                                                                                                  ")")

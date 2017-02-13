@@ -92,8 +92,8 @@ system.knowledge.add({Node('Blank Slate'),
                              Node("Blank")))})
 for i in range(5):
     system.step()
-    print "State of the Mentons in step " + str(i + 2) + ": "
-    for i in range(len(engine.mentonPools)):
-        print(str(engine.mentonPools[i].name) + ": " + str(engine.mentonPools[i].mentons))
+    print "\nState of the Mentons in step " + str(i + 2) + ": "
+    for j in range(len(engine.mentonPools)):
+        print(str(engine.mentonPools[j].name) + ": " + str(engine.mentonPools[j].mentons))
 
 print '\n' + system.log
