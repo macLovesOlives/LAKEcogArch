@@ -1,8 +1,7 @@
 # The Lake Cognitive Theory
 # By Jim Davies (jim@jimdavies.org)
 # Started 2006
-
-# Extended by Mackenzie Ostler (mackenzie.ostler@gmail.com)
+# Extended and implemented by Mackenzie Ostler (mackenzie.ostler@gmail.com)
 
 VERBOSE = 1
 
@@ -101,8 +100,6 @@ class Mind:
             self.mentonPools[i].printPool()
             i += 1
 
-
-
     def prioritize(self, tosort):
         """
         returns list of productions that are sorted by priority
@@ -132,7 +129,7 @@ class Mind:
         pool_list = []
 
         for i in range(len(pool_keys)):
-            pool = MentonPool(self.name, pool_keys[i], pools[pool_keys[i]], rates[pool_keys[i]])
+            pool = MentonPool(self.name, pool_keys[i], capacities[pool_keys[i]],pools[pool_keys[i]], rates[pool_keys[i]])
             pool_list.append(pool)
         self.productions = productions
         self.mentonPools = pool_list
@@ -170,15 +167,15 @@ class Mind:
 
 class MentonPool:
     "a pool of mentons"
-    def __init__(self, theMind, theName, mentonCapacity, replenishRate):
+    def __init__(self, the_mind, the_name, menton_capacity, current_mentons, replenish_rate):
 
         print("MentonPool __init__")
 
-        self.mind = theMind
-        self.name = theName
-        self.mentons = mentonCapacity
-        self.maxMentons = mentonCapacity
-        self.replenishRate = replenishRate
+        self.mind = the_mind
+        self.name = the_name
+        self.mentons = current_mentons
+        self.maxMentons = menton_capacity
+        self.replenishRate = replenish_rate
         self.temporaryListOfActions = []
 
         self.printPool()
