@@ -23,7 +23,7 @@ class Mind:
     def __call__(self):
         """Returns a dict mapping productions to booleans. Booleans
         represent whether their keys can fire at current simulation
-        setp."""
+        step."""
 
         # determine applicable productions
 
@@ -52,7 +52,7 @@ class Mind:
                 self.mentonPools[i].mentons += self.mentonPools[i].replenishRate
             else:
                 self.mentonPools[i].mentons = self.mentonPools[i].maxMentons
-                # self.mentonPools[i].print_pool()
+                self.mentonPools[i].print_pool()
 
     def executable(self, production):
         """
@@ -78,7 +78,7 @@ class Mind:
         i = 0
         for key in costs:
             self.mentonPools[i].mentons -= costs[key]
-            # self.mentonPools[i].print_pool()
+            self.mentonPools[i].print_pool()
             i += 1
 
     def prioritize(self, tosort):
@@ -148,7 +148,7 @@ class MentonPool:
         self.replenishRate = replenish_rate
         self.temporaryListOfActions = []
 
-        # self.print_pool()
+        self.print_pool()
 
     def print_pool(self):
         print("\n\n****  POOL  ****")
