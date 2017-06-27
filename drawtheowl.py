@@ -5,7 +5,7 @@ import lake
 def draw_the_owl():
     """ source: Pulsatrix perspicillata
         http://www.ascii-art.de/ascii/mno/owl.txt """
-    print "                            ____"
+    print "                             ____"
     print "                          ,''    ''."
     print "                         / `-.  .-' \\"
     print "                        /( (O))((O) )"
@@ -107,7 +107,7 @@ costs = {draw_body: {'Visuo-Spatial': 200},
          owl_cool:  {'Visuo-Spatial': 400, 'Motor/Planning': 400},
          # done:      {'Visuo-Spatial': 200, 'Motor/Planning': 600},
          more_done: {'Visuo-Spatial': 600, 'Motor/Planning': 800},
-         mic_drop:  {'Visuo-Spatial': 20, 'Motor/Planning': 600}}
+         mic_drop:  {'Visuo-Spatial': 200, 'Motor/Planning': 600}}
 priorities = {draw_body: 1,
               draw_head: 1,
               owl_lame: 1,
