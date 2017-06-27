@@ -1,0 +1,149 @@
+{
+	"mind" : {
+		"name": "mackenzie's mind",
+        "number of steps": 5,
+        "initial knowledge":[
+            {"arrow":
+                {
+                    "this": "Paper",
+                    "to": "Is",
+                    "that": "Blank"
+                }
+            }
+        ],
+        "pools":[
+            {
+                "name":"visuo-spatial",
+                "initial": 800,
+                "capacity": 1000,
+                "rates":400
+            },
+            {
+                "name": "motor/planning",
+                "initial": 800,
+                "capacity": 1000,
+                "rates": 400
+            }
+        ],
+		"gactions": [
+            {
+                "name": "draw_body",
+                "precondition":[
+                    {"node": "drawing circle"}
+                ],
+                "action":[
+                    {"start":[
+                        {"node": "drawing second circle"},
+                        {"node": "top circle"}
+                    ]},
+                    {"stop":[
+                        {"node": "drawing circle"}
+                    ]}
+                ],
+                "priority": 1,
+                "costs":[
+                    {"visuo-spatial": 200},
+                    {"motor/planning": 0}
+                ]
+            },
+            {
+                "name": "owl_lame",
+                "precondition":[
+                    {"node": "top circle"},
+                    {"node": "bottom circle"},
+                    {"node": "get sh*t done"}
+                ],
+                "action":[
+                    {"start":[
+                        {"node": "draw the owl."}
+                    ]},
+                    {"stop":[]}
+                ],
+                "priority": 1,
+                "costs":[
+                    {"visuo-spatial": 200},
+                    {"motor/planning": 200}
+                ]
+            },
+            {
+                "name": "owl_cool",
+                "precondition":[
+                    {"node": "top circle"},
+                    {"node": "bottom circle"},
+                    {"node": "get SH*T done"}
+                ],
+                "action":[
+                    {"start":[
+                        {"node": "draw the f*cking owl."}
+                    ]},
+                    {"stop":[]}
+                ],
+                "priority": 3,
+                "costs":[
+                    {"visuo-spatial": 400},
+                    {"motor/planning": 400}
+                ]
+            },
+            {
+                "name": "done",
+                "precondition":[
+                    {"node": "top circle"},
+                    {"node": "drawing second circle"}
+                ],
+                "action":[
+                    {"start":[
+                        {"node": "get sh*t done"},
+                        {"node": "bottom circle"}
+                    ]},
+                    {"stop":[
+                        {"node": "drawing second circle"}
+                    ]}
+                ],
+                "priority": 1,
+                "costs":[
+                    {"visuo-spatial": 200},
+                    {"motor/planning": 600}
+                ]
+            },
+            {
+                "name": "more_done",
+                "precondition":[
+                    {"node": "top circle"},
+                    {"node": "drawing second circle"}
+                ],
+                "action":[
+                    {"start":[
+                        {"node": "get SH*T done"},
+                        {"node": "bottom circle"}
+                    ]},
+                    {"stop":[
+                        {"node": "drawing second circle"}
+                    ]}
+                ],
+                "priority": 3,
+                "costs":[
+                    {"visuo-spatial": 600},
+                    {"motor/planning": 800}
+                ]
+            },
+            {
+                "name": "mic_drop",
+                "precondition":[
+                    {"node": "draw the f*cking owl"}
+                ],
+                "action":[
+                    {"start":[
+                        {"node": "mic drop!"}
+                    ]},
+                    {"stop":[]}
+                ],
+                "priority": 3,
+                "costs":[
+                    {"visuo-spatial": 200},
+                    {"motor/planning": 600}
+                ]
+            }
+        ]
+    }
+}
+
