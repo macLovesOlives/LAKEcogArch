@@ -1,5 +1,5 @@
 '''CGSC 4001/5001 Can Mekik, Josh Noronha, and Zahrah Hajali'''
-
+""" minor edits and changes made by Mackenzie Ostler """
 
 # This module provides the ProductionSystem class, which is a
 # customizable production system building kit.
